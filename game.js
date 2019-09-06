@@ -72,6 +72,28 @@ function hearts() {
 }
 
 
+function foodspawn() {
+    ctx.drawImage(food, fx, fy, fw, fh);
+
+    if(life < 5) {
+        console.log("spawning food");
+        fx = Math.floor((Math.random()*1220));
+        fy = Math.floor((Math.random()*600));
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*key-controls*/
 
 window.onkeydown = function (event) {
@@ -89,7 +111,7 @@ window.onkeydown = function (event) {
         y = y + 10;
     }
 
-
+    /*Enemy hitbox: collision*/
     if ((y + h) < (yi) ||
         (y) > (yi + hi) ||
         (x + w) < (xi) ||
@@ -100,6 +122,9 @@ window.onkeydown = function (event) {
         life = life - 1;
         console.log(life);
 
+        window.setTimeout(foodspawn, 30000);
+
+
 
         if (life <= 0) {
             gameOver();
@@ -108,6 +133,9 @@ window.onkeydown = function (event) {
     }
 
 
+
+
+/*Food hitbox: collision and randomizer*/
     if ((y + h) < (fy) ||
         (y) > (fy + fh) ||
         (x + w) < (fx) ||
@@ -119,6 +147,17 @@ window.onkeydown = function (event) {
         console.log("Catch food");
         life = life + 1;
         console.log(life);
+        fx = -1000;
+        window.setTimeout(foodspawn, 30000);
+
+        /*MAX LIFE*/
+
+        if (life >= 5) {
+            life = 5;
+            console.log("stop spawning food");
+
+
+        }
 
     }
 
@@ -152,13 +191,7 @@ window.onkeydown = function (event) {
     }
 
 
-    /*MAX LIFE*/
-    if (life >= 5) {
-        life = 5;
-        console.log("stop spawning food");
-        fx = fx - 1000;
 
-    }
 
 };
 
