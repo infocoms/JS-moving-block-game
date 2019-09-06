@@ -16,7 +16,7 @@ h = 70;
 var enemy = new Image();
 enemy.src = "img/meowth.svg";
 xi = 100;
-yi = 100;
+yi = 300;
 wi = 70;
 hi = 70;
 
@@ -37,12 +37,20 @@ fh = 40;
 
 
 Start();
+window.setInterval(ReRender, 10);
+window.setInterval(enemyMoves, 200);
+
+
+function ReRender() {
+    ctx.clearRect(0, 0, 1500, 900);
+    Start();
+}
 
 function Start() {
-    hearts();
     createChar(x, y, w, h);
     createEnemy(xi, yi, wi, hi);
-
+    theLives();
+    foodrender();
 }
 
 
@@ -64,10 +72,7 @@ function gameOver() {
 
 }
 
-function hearts() {
-    ctx.drawImage(heart, 100, yh, wh, hh);
-    ctx.drawImage(heart, 140, yh, wh, hh);
-    ctx.drawImage(heart, 180, yh, wh, hh);
+function foodrender() {
     ctx.drawImage(food, fx, fy, fw, fh);
 }
 
@@ -75,30 +80,69 @@ function hearts() {
 function foodspawn() {
     ctx.drawImage(food, fx, fy, fw, fh);
 
-    if(life < 5) {
+    if (life < 5) {
         console.log("spawning food");
-        fx = Math.floor((Math.random()*1220));
-        fy = Math.floor((Math.random()*600));
+        fx = Math.floor((Math.random() * 1220));
+        fy = Math.floor((Math.random() * 600));
     }
 }
 
 
+function theLives() {
+    /*heart icons corresponds to amount of lives */
+    if (life === 5) {
+        ctx.drawImage(heart, 100, yh, wh, hh);
+        ctx.drawImage(heart, 140, yh, wh, hh);
+        ctx.drawImage(heart, 180, yh, wh, hh);
+        ctx.drawImage(heart, 220, yh, wh, hh);
+        ctx.drawImage(heart, 260, yh, wh, hh);
+    } else if (life === 4) {
+        ctx.drawImage(heart, 100, yh, wh, hh);
+        ctx.drawImage(heart, 140, yh, wh, hh);
+        ctx.drawImage(heart, 180, yh, wh, hh);
+        ctx.drawImage(heart, 220, yh, wh, hh);
+    } else if (life === 3) {
+        ctx.drawImage(heart, 100, yh, wh, hh);
+        ctx.drawImage(heart, 140, yh, wh, hh);
+        ctx.drawImage(heart, 180, yh, wh, hh);
+    } else if (life === 2) {
+        ctx.drawImage(heart, 100, yh, wh, hh);
+        ctx.drawImage(heart, 140, yh, wh, hh);
+    } else if (life === 1) {
+        ctx.drawImage(heart, 100, yh, wh, hh);
+    }
+
+}
 
 
+function enemyMoves() {
+    if (xi <= 1220) {
+        xi = xi + 10;
+    }
+    if (xi >= 1220) {
+        xi = xi - 10;
+    } else if (yi <= 620) {
+        yi = yi + 10;
 
+    } else if (yi >= 620) {
+        yi = yi - 10;
 
+    } else if (xi >= 10) {
+        xi = xi - 10;
+    } else if (xi <= 10) {
+        xi = xi + 10;
 
-
-
-
-
+    } else if (yi >= 10) {
+        yi = yi - 10;
+    } else if (yi <= 10) {
+        yi = yi + 10;
+    }
+}
 
 
 /*key-controls*/
-
 window.onkeydown = function (event) {
     var keyPr = event.keyCode;
-
     if (keyPr === 39 && x <= 1220) {
         x = x + 10;
     } else if (keyPr === 37 && x > 8) {
@@ -125,7 +169,6 @@ window.onkeydown = function (event) {
         window.setTimeout(foodspawn, 30000);
 
 
-
         if (life <= 0) {
             gameOver();
             alert("you Died!")
@@ -133,9 +176,7 @@ window.onkeydown = function (event) {
     }
 
 
-
-
-/*Food hitbox: collision and randomizer*/
+    /*Food hitbox: collision and randomizer*/
     if ((y + h) < (fy) ||
         (y) > (fy + fh) ||
         (x + w) < (fx) ||
@@ -162,39 +203,7 @@ window.onkeydown = function (event) {
     }
 
 
-    ctx.clearRect(0, 0, 1500, 900);
-    createChar(x, y, w, h);
-    createEnemy(xi, yi, wi, hi);
-    ctx.drawImage(food, fx, fy, fw, fh);
-
-    /*heart icons corresponds to amount of lives */
-    if (life === 5) {
-        ctx.drawImage(heart, 100, yh, wh, hh);
-        ctx.drawImage(heart, 140, yh, wh, hh);
-        ctx.drawImage(heart, 180, yh, wh, hh);
-        ctx.drawImage(heart, 220, yh, wh, hh);
-        ctx.drawImage(heart, 260, yh, wh, hh);
-    } else if (life === 4) {
-        ctx.drawImage(heart, 100, yh, wh, hh);
-        ctx.drawImage(heart, 140, yh, wh, hh);
-        ctx.drawImage(heart, 180, yh, wh, hh);
-        ctx.drawImage(heart, 220, yh, wh, hh);
-    } else if (life === 3) {
-        ctx.drawImage(heart, 100, yh, wh, hh);
-        ctx.drawImage(heart, 140, yh, wh, hh);
-        ctx.drawImage(heart, 180, yh, wh, hh);
-    } else if (life === 2) {
-        ctx.drawImage(heart, 100, yh, wh, hh);
-        ctx.drawImage(heart, 140, yh, wh, hh);
-    } else if (life === 1) {
-        ctx.drawImage(heart, 100, yh, wh, hh);
-    }
-
-
-
-
 };
-
 
 
 

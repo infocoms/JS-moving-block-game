@@ -23,5 +23,8 @@ border: 3px solid red;
 }
 
 html, body {
+  background-image: url(img/bg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
   overflow: hidden;
 }
