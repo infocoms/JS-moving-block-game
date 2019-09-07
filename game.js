@@ -1,9 +1,81 @@
+const SCREEN_WIDTH = 1220;
+const SCREEN_HEIGHT = 630;
+
+class Enemy {
+    constructor(screenWidth, screenHeight) {
+        this.image = document.getElementById("enemy-image");
+        this.speed = {x: 2, y: 2};
+        this.position = {x: 10, y: 10};
+        this.size = 70;
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+    }
+
+    draw() {
+        ctx.drawImage(this.image, this.position.x, this.position.y, this.size, this.size);
+
+    }
+
+
+    update(deltaTime) {
+        this.position.x += this.speed.x;
+        this.position.y += this.speed.y;
+
+        if (this.position.x > this.screenWidth || this.position.x < 0) {
+            this.speed.x = -this.speed.x;
+        }
+
+        if (this.position.y > this.screenHeight || this.position.y < 0) {
+            this.speed.y = -this.speed.y;
+        }
+
+
+        let enemybox = this.position.y + this.size;
+        let character = y;
+        let leftsidechar = x;
+        let rightsidechar = x + h;
+
+
+        if (enemybox >= character
+            && this.position.x >= leftsidechar
+            && this.position.x + this.size <= rightsidechar
+        ) {
+            this.speed.y = -this.speed.y;
+            this.position.y = y - this.size;
+
+            life = life - 1;
+            console.log(life);
+
+            window.setTimeout(foodspawn, 30000);
+
+
+            if (life <= 0) {
+                gameOver();
+                alert("you Died!")
+            }
+
+
+        }
+    }
+
+
+}
+
+
+let lastTime = 0;
+
+
 var stage = document.getElementById('myCanvas'),
     ctx = stage.getContext('2d'),
     life = 3;
-console.log(life);
-/*object to load on load*/
 
+console.log(life);
+
+
+
+
+/*object to load on load*/
+let enemy = new Enemy(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 var char = new Image();
 char.src = "img/pikachu.svg";
@@ -11,14 +83,6 @@ x = 200;
 y = 500;
 w = 70;
 h = 70;
-
-
-var enemy = new Image();
-enemy.src = "img/meowth.svg";
-xi = 100;
-yi = 300;
-wi = 70;
-hi = 70;
 
 
 var heart = new Image();
@@ -38,31 +102,33 @@ fh = 40;
 
 Start();
 window.setInterval(ReRender, 10);
-window.setInterval(enemyMoves, 200);
+
+//window.setInterval(enemyMoves, 200);
 
 
 function ReRender() {
     ctx.clearRect(0, 0, 1500, 900);
-    Start();
 }
 
-function Start() {
+function Start(timestamp) {
+    var deltaTime = timestamp - lastTime;
+    lastTime = timestamp;
+    requestAnimationFrame(Start);
     createChar(x, y, w, h);
-    createEnemy(xi, yi, wi, hi);
     theLives();
     foodrender();
+    enemy.update(deltaTime);
+    enemy.draw(ctx);
+
 }
 
 
 function createChar(x, y, w, h) {
     ctx.drawImage(char, x, y, w, h);
     ctx.font = "30px Arial";
-    ctx.fillText("Life: " + life, 10, 30);
+    ctx.fillText("Life: " + life, 10, 32);
+    ctx.fillStyle = "white";
 
-}
-
-function createEnemy(xi, yi, wi, hi) {
-    ctx.drawImage(enemy, xi, yi, wi, hi);
 }
 
 function gameOver() {
@@ -115,30 +181,6 @@ function theLives() {
 }
 
 
-function enemyMoves() {
-    if (xi <= 1220) {
-        xi = xi + 10;
-    }
-    if (xi >= 1220) {
-        xi = xi - 10;
-    } else if (yi <= 620) {
-        yi = yi + 10;
-
-    } else if (yi >= 620) {
-        yi = yi - 10;
-
-    } else if (xi >= 10) {
-        xi = xi - 10;
-    } else if (xi <= 10) {
-        xi = xi + 10;
-
-    } else if (yi >= 10) {
-        yi = yi - 10;
-    } else if (yi <= 10) {
-        yi = yi + 10;
-    }
-}
-
 
 /*key-controls*/
 window.onkeydown = function (event) {
@@ -155,25 +197,6 @@ window.onkeydown = function (event) {
         y = y + 10;
     }
 
-    /*Enemy hitbox: collision*/
-    if ((y + h) < (yi) ||
-        (y) > (yi + hi) ||
-        (x + w) < (xi) ||
-        (x) > (xi + wi)) {
-
-    } else {
-
-        life = life - 1;
-        console.log(life);
-
-        window.setTimeout(foodspawn, 30000);
-
-
-        if (life <= 0) {
-            gameOver();
-            alert("you Died!")
-        }
-    }
 
 
     /*Food hitbox: collision and randomizer*/

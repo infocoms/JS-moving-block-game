@@ -20,4 +20,7 @@ html, body {
   background-size: cover;
   overflow: hidden; }
 
+img {
+  display: none; }
+
 /*# sourceMappingURL=style.css.map */
